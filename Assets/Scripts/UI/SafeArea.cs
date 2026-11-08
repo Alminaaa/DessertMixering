@@ -1,24 +1,24 @@
-using UnityEditor.VersionControl;
 using UnityEngine;
 
 /// <summary>
-/// Fits a panel under the Canvas into the phone's "safe area."
+/// Fits a UI panel inside the phone's "safe area", so buttons and text
+/// are never hidden behind the notch, camera hole or home bar.
 ///
-/// Usage:
+/// Hierarchy:
 ///   Canvas
-///    ?? Background      (fullscreen)
-///    ?? SafeAreaPanel   (add this script)
-///        ?? buttons, score, menu...
+///   |- Background      (full screen, NO SafeArea script)
+///   |- SafeAreaPanel   (this script, stretched to full screen)
+///      |- Buttons, score, menus...
 /// </summary>
 [RequireComponent(typeof(RectTransform))]
 [DisallowMultipleComponent]
 public class SafeArea : MonoBehaviour
 {
-    [Header("On which sides should a safe zone be applied?")]
-    [Tooltip("Notch / camera hole / status bar at the top")]
+    [Header("Which edges should respect the safe area?")]
+    [Tooltip("Notch / camera hole / status bar")]
     [SerializeField] private bool applyTop = true;
 
-    [Tooltip("Bottom home screen bar (iPhone) / navigation bar")]
+    [Tooltip("Home bar (iPhone) / navigation bar")]
     [SerializeField] private bool applyBottom = true;
 
     [SerializeField] private bool applyLeft = true;
@@ -37,8 +37,8 @@ public class SafeArea : MonoBehaviour
 
     private void Update()
     {
-        // Recalculate if the screen size, orientation, or safe area changes.
-        // (This also ensures that it updates when you change the device in the Device Simulator.)
+        // Recalculate if the screen size, orientation or safe area changes.
+        // This also updates when you switch devices in the Device Simulator.
         if (Screen.safeArea != lastSafeArea
             || Screen.width != lastScreenSize.x
             || Screen.height != lastScreenSize.y
@@ -61,7 +61,7 @@ public class SafeArea : MonoBehaviour
         if (width <= 0 || height <= 0)
             return;
 
-        // Convert the safe area, specified in pixels, into anchor values ??ranging from 0 to 1.
+        // Convert the safe area from pixels to 0-1 anchor values.
         Vector2 anchorMin = safe.position;
         Vector2 anchorMax = safe.position + safe.size;
 
@@ -70,7 +70,7 @@ public class SafeArea : MonoBehaviour
         anchorMax.x /= width;
         anchorMax.y /= height;
 
-        // Push the unwanted edges back against the edge of the screen.
+        // Edges that should not use the safe area go back to the screen edge.
         if (!applyLeft) anchorMin.x = 0f;
         if (!applyBottom) anchorMin.y = 0f;
         if (!applyRight) anchorMax.x = 1f;
