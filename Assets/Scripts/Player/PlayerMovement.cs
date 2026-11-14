@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 /// Moves the player in any direction (360 degrees) with the on-screen joystick.
 /// In the editor you can also use WASD / arrow keys for quick testing.
 ///
+/// Put this on the root "Player" object together with a Rigidbody2D and a Collider2D.
 /// </summary>
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerMovement : MonoBehaviour
@@ -26,6 +27,9 @@ public class PlayerMovement : MonoBehaviour
 
     [Tooltip("How fast the player stops when the joystick is released.")]
     [SerializeField] private float deceleration = 80f;
+
+    /// <summary>When true, input is still read but does not move the player (used while jumping).</summary>
+    public bool ControlLocked { get; set; }
 
     /// <summary>Raw input this frame, length 0 to 1.</summary>
     public Vector2 MoveInput { get; private set; }
@@ -68,6 +72,9 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (ControlLocked)
+            return;
+
         // Apply physics at the fixed physics rate.
         Vector2 targetVelocity = analogSpeed
             ? MoveInput * moveSpeed
