@@ -1,4 +1,3 @@
-
 using UnityEngine;
 
 /// <summary>
@@ -29,8 +28,7 @@ public class DessertLoot : MonoBehaviour
     [Min(0f)]
     [SerializeField] private float flyHeight = 0.25f;
 
-    [SerializeField] private Vector2 targetOffset =
-        new Vector2(0f, 0.2f);
+    [SerializeField] private Vector2 targetOffset = new Vector2(0f, 0.2f);
 
     [Header("Audio")]
     [SerializeField] private AudioClip pickupSFX;
@@ -55,8 +53,7 @@ public class DessertLoot : MonoBehaviour
 
     private void Start()
     {
-        PlayerMovement movement =
-            FindFirstObjectByType<PlayerMovement>();
+        PlayerMovement movement = FindFirstObjectByType<PlayerMovement>();
 
         if (movement != null)
             player = movement.transform;
@@ -86,21 +83,15 @@ public class DessertLoot : MonoBehaviour
         if (pickupTimer < pickupDelay)
             return;
 
-        Vector2 direction =
-            (Vector2)player.position -
-            (Vector2)transform.position;
+        Vector2 direction = (Vector2)player.position - (Vector2)transform.position;
 
-        if (direction.sqrMagnitude <=
-            pickupRange * pickupRange)
-        {
+        if (direction.sqrMagnitude <= pickupRange * pickupRange)
             EnterFlying();
-        }
     }
 
     private void EnterFlying()
     {
         CurrentState = State.Flying;
-
         flyTimer = 0f;
         flyStartPosition = transform.position;
     }
@@ -109,23 +100,15 @@ public class DessertLoot : MonoBehaviour
     {
         flyTimer += Time.deltaTime;
 
-        float t = Mathf.Clamp01(
-            flyTimer / flyDuration
-        );
+        float t = Mathf.Clamp01(flyTimer / flyDuration);
 
         // Accelerate towards the player.
         float easedT = t * t;
 
-        Vector3 targetPosition =
-            player.position + (Vector3)targetOffset;
-
+        Vector3 targetPosition = player.position + (Vector3)targetOffset;
         targetPosition.z = flyStartPosition.z;
 
-        Vector3 position = Vector3.Lerp(
-            flyStartPosition,
-            targetPosition,
-            easedT
-        );
+        Vector3 position = Vector3.Lerp(flyStartPosition, targetPosition, easedT);
 
         // Small visual arc during the flight.
         position.y += Mathf.Sin(t * Mathf.PI) * flyHeight;
@@ -133,8 +116,7 @@ public class DessertLoot : MonoBehaviour
         transform.position = position;
 
         // Shrink slightly while approaching the player.
-        transform.localScale = originalScale *
-            Mathf.Lerp(1f, 0.25f, t);
+        transform.localScale = originalScale * Mathf.Lerp(1f, 0.25f, t);
 
         if (t >= 1f)
             EnterCollected();
@@ -147,31 +129,18 @@ public class DessertLoot : MonoBehaviour
 
         CurrentState = State.Collected;
 
-        if (pickupSFX != null)
-        {
-            AudioSource.PlayClipAtPoint(
-                pickupSFX,
-                transform.position,
-                pickupSFXVolume
-            );
-        }
+        SoundPlayer.Play(pickupSFX, pickupSFXVolume, 0.05f);
 
-        // Inventory integration will be added later.
+        // Inventory integration comes in Part 2.
 
         Destroy(gameObject);
     }
 
 #if UNITY_EDITOR
-
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.green;
-
-        Gizmos.DrawWireSphere(
-            transform.position,
-            pickupRange
-        );
+        Gizmos.DrawWireSphere(transform.position, pickupRange);
     }
-
 #endif
 }

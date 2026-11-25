@@ -17,6 +17,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private bool keyboardFallback = true;
 
     [Header("Movement")]
+    [Tooltip("Base move speed. Other systems change the final speed with SpeedMultiplier.")]
     [SerializeField] private float moveSpeed = 5f;
 
     [Tooltip("ON: a small joystick push makes the player walk slowly. OFF: always full speed.")]
@@ -31,6 +32,13 @@ public class PlayerMovement : MonoBehaviour
     /// <summary>When true, input is still read but does not move the player (used while jumping).</summary>
     public bool ControlLocked { get; set; }
 
+    /// <summary>Multiplies the base speed (e.g. 1.2 outside enemy areas). Set by other systems.</summary>
+    public float SpeedMultiplier
+    {
+        get => speedMultiplier;
+        set => speedMultiplier = Mathf.Max(0f, value);
+    }
+
     /// <summary>Raw input this frame, length 0 to 1.</summary>
     public Vector2 MoveInput { get; private set; }
 
@@ -43,13 +51,14 @@ public class PlayerMovement : MonoBehaviour
     /// <summary>Last direction the player moved in. Kept while standing still.</summary>
     public Vector2 FacingDirection { get; private set; } = Vector2.down;
 
-    /// <summary>Current speed from 0 (standing) to 1 (full speed).</summary>
+    /// <summary>Current speed from 0 (standing) to 1 (base speed).</summary>
     public float NormalizedSpeed =>
         moveSpeed > 0f ? Mathf.Clamp01(rb.linearVelocity.magnitude / moveSpeed) : 0f;
 
     private const float MinInputSqr = 0.0001f;
 
     private Rigidbody2D rb;
+    private float speedMultiplier = 1f;
 
     private void Awake()
     {
@@ -75,10 +84,12 @@ public class PlayerMovement : MonoBehaviour
         if (ControlLocked)
             return;
 
+        float speed = moveSpeed * speedMultiplier;
+
         // Apply physics at the fixed physics rate.
         Vector2 targetVelocity = analogSpeed
-            ? MoveInput * moveSpeed
-            : MoveInput.normalized * moveSpeed;
+            ? MoveInput * speed
+            : MoveInput.normalized * speed;
 
         float rate = targetVelocity.sqrMagnitude > MinInputSqr ? acceleration : deceleration;
 

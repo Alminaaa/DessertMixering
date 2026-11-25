@@ -1,11 +1,10 @@
-
 using UnityEngine;
 
 /// <summary>
 /// Flips the enemy left / right based on its movement and applies the visual scale.
 /// Only this child is scaled, so health, speed and collider never change.
-/// Also handles death effects.
-/// 
+/// Also plays the death effects.
+///
 /// Put this on the "Visual" child of the enemy prefab.
 /// </summary>
 public class EnemyVisual : MonoBehaviour
@@ -50,17 +49,10 @@ public class EnemyVisual : MonoBehaviour
     private void Apply()
     {
         float sign = spriteDrawnFacingRight ? facing : -facing;
-
-        transform.localScale = new Vector3(
-            scale * sign,
-            scale,
-            1f
-        );
+        transform.localScale = new Vector3(scale * sign, scale, 1f);
     }
 
-    /// <summary>
-    /// Plays the death effects using this enemy's data.
-    /// </summary>
+    /// <summary>Plays the death effect and sound using this enemy's data.</summary>
     public void PlayDeathEffects()
     {
         if (enemy == null || enemy.Data == null)
@@ -68,28 +60,7 @@ public class EnemyVisual : MonoBehaviour
 
         EnemyData data = enemy.Data;
 
-        if (data.deathVFX != null)
-        {
-            ParticleSystem effect = Instantiate(
-                data.deathVFX,
-                transform.position,
-                Quaternion.identity
-            );
-
-            ParticleSystem.MainModule main = effect.main;
-
-            main.startColor = data.vfxColor;
-
-            effect.Play();
-        }
-
-        if (data.deathSFX != null)
-        {
-            AudioSource.PlayClipAtPoint(
-                data.deathSFX,
-                transform.position,
-                data.deathSFXVolume
-            );
-        }
+        VfxSpawner.Spawn(data.deathVFX, transform.position, data.vfxColor);
+        SoundPlayer.Play(data.deathSFX, data.deathSFXVolume, 0.05f);
     }
 }

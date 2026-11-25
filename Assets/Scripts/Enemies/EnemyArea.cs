@@ -32,14 +32,25 @@ public class EnemyArea : MonoBehaviour
 
     [SerializeField] private int maxAttemptsPerEnemy = 30;
 
+    /// <summary>Every active enemy area in the scene.</summary>
+    public static IReadOnlyList<EnemyArea> All => all;
+
     public Bounds Bounds => bounds;
     public IReadOnlyList<Enemy> Enemies => enemies;
+
+    private static readonly List<EnemyArea> all = new List<EnemyArea>();
 
     private BoxCollider2D areaCollider;
     private Bounds bounds;
     private ContactFilter2D obstacleFilter;
     private readonly List<Enemy> enemies = new List<Enemy>();
     private readonly List<Collider2D> overlapHits = new List<Collider2D>(8);
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetStatics()
+    {
+        all.Clear();
+    }
 
     private void Awake()
     {
@@ -50,6 +61,17 @@ public class EnemyArea : MonoBehaviour
         obstacleFilter = new ContactFilter2D();
         obstacleFilter.SetLayerMask(obstacleLayers);
         obstacleFilter.useTriggers = false;
+    }
+
+    private void OnEnable()
+    {
+        if (!all.Contains(this))
+            all.Add(this);
+    }
+
+    private void OnDisable()
+    {
+        all.Remove(this);
     }
 
     private void Start()
