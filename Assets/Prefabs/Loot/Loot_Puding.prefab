@@ -105,6 +105,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe03a1b9aff872743a36cdc39195547f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DessertLoot
+  item: {fileID: 11400000, guid: e21df0ed2f3f20c43b4d15c5c4f1dac9, type: 2}
+  amount: 1
   pickupRange: 1
   pickupDelay: 0.5
   flyDuration: 0.5

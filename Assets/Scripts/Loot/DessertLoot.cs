@@ -2,7 +2,9 @@ using UnityEngine;
 
 /// <summary>
 /// A collectible dessert dropped by a defeated enemy.
-/// Flies towards the player when they enter pickup range.
+/// Flies to the player when they come close AND the inventory has space,
+/// then is added to the inventory. With a full inventory it waits on the ground.
+///
 /// Put this on the root object of the loot prefab.
 /// </summary>
 public class DessertLoot : MonoBehaviour
@@ -14,10 +16,17 @@ public class DessertLoot : MonoBehaviour
         Collected
     }
 
+    [Header("Item")]
+    [Tooltip("What the player gets, e.g. Puding_Raw.")]
+    [SerializeField] private ItemData item;
+
+    [SerializeField, Min(1)] private int amount = 1;
+
     [Header("Pickup")]
     [Min(0.1f)]
     [SerializeField] private float pickupRange = 0.8f;
 
+    [Tooltip("Short wait after dropping, so the loot is visible before it flies.")]
     [Min(0.01f)]
     [SerializeField] private float pickupDelay = 0.2f;
 
@@ -38,6 +47,7 @@ public class DessertLoot : MonoBehaviour
 
     public State CurrentState { get; private set; }
 
+    private PlayerInventory inventory;
     private Transform player;
     private Vector3 flyStartPosition;
     private Vector3 originalScale;
@@ -53,10 +63,13 @@ public class DessertLoot : MonoBehaviour
 
     private void Start()
     {
-        PlayerMovement movement = FindFirstObjectByType<PlayerMovement>();
+        inventory = PlayerInventory.Instance;
 
-        if (movement != null)
-            player = movement.transform;
+        if (inventory != null)
+            player = inventory.transform;
+
+        if (item == null)
+            Debug.LogWarning($"[DessertLoot] {name} has no Item assigned.", this);
     }
 
     private void Update()
@@ -80,13 +93,19 @@ public class DessertLoot : MonoBehaviour
     {
         pickupTimer += Time.deltaTime;
 
-        if (pickupTimer < pickupDelay)
+        if (pickupTimer < pickupDelay || item == null)
             return;
 
         Vector2 direction = (Vector2)player.position - (Vector2)transform.position;
 
-        if (direction.sqrMagnitude <= pickupRange * pickupRange)
-            EnterFlying();
+        if (direction.sqrMagnitude > pickupRange * pickupRange)
+            return;
+
+        // Full inventory: stay on the ground and try again next frame.
+        if (!inventory.TryReserve(item, amount))
+            return;
+
+        EnterFlying();
     }
 
     private void EnterFlying()
@@ -129,11 +148,17 @@ public class DessertLoot : MonoBehaviour
 
         CurrentState = State.Collected;
 
+        inventory.CommitReservation(item, amount);
         SoundPlayer.Play(pickupSFX, pickupSFXVolume, 0.05f);
 
-        // Inventory integration comes in Part 2.
-
         Destroy(gameObject);
+    }
+
+    private void OnDestroy()
+    {
+        // Destroyed mid-flight (e.g. scene change): free the reserved space.
+        if (CurrentState == State.Flying && inventory != null)
+            inventory.CancelReservation(item, amount);
     }
 
 #if UNITY_EDITOR
