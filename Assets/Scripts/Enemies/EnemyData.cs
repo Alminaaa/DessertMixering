@@ -1,4 +1,3 @@
-
 using UnityEngine;
 
 /// <summary>
@@ -18,6 +17,8 @@ public class EnemyData : ScriptableObject
     [Min(0f)]
     public float baseMoveSpeed = 1.5f;
 
+    public bool canBeDamaged = true;
+
     [Header("Visual (never changes gameplay values)")]
     [Tooltip("Only scales the sprite. Health, speed and collider stay the same.")]
     [Min(0.1f)]
@@ -26,11 +27,60 @@ public class EnemyData : ScriptableObject
     [Tooltip("Color of liquid particles for this dessert.")]
     public Color vfxColor = new Color(0.45f, 0.25f, 0.1f);
 
+    [Tooltip("Size multiplier for hit and death effects.")]
+    [Min(0.1f)]
+    public float vfxScale = 1f;
+
     [Header("Idle Movement (seconds)")]
     [Min(0f)] public float idleDurationMin = 3f;
     [Min(0f)] public float idleDurationMax = 6f;
     [Min(0f)] public float moveDurationMin = 3f;
     [Min(0f)] public float moveDurationMax = 6f;
+
+    [Header("Hit")]
+    [Min(0f)]
+    public float damageFlashDuration = 0.1f;
+
+    public Color damageFlashColor = new Color(1f, 0.35f, 0.35f, 1f);
+
+    [Tooltip("Liquid splash played on every hit. Tinted with VFX Color.")]
+    public ParticleSystem hitVFX;
+
+    public AudioClip hitSFX;
+
+    [Range(0f, 1f)]
+    public float hitSFXVolume = 1f;
+
+    [Header("Panic")]
+    public bool canPanic = true;
+
+    [Tooltip("Panic speed = Base Move Speed x this.")]
+    [Min(1f)]
+    public float panicSpeedMultiplier = 1.5f;
+
+    [Tooltip("Highest allowed panic speed. Keep it below the player speed (5). 0 = no limit.")]
+    [Min(0f)]
+    public float panicSpeedCap = 4f;
+
+    [Tooltip("How long the panic lasts after the last hit (seconds).")]
+    [Min(0.1f)]
+    public float panicDuration = 2f;
+
+    [Tooltip("A new hit restarts the panic timer.")]
+    public bool panicResetOnDamage = true;
+
+    [Tooltip("How often a panicking enemy picks a new escape direction (seconds).")]
+    [Min(0.1f)]
+    public float panicDirectionInterval = 0.8f;
+
+    [Tooltip("Escape directions can differ this much from 'straight away from the player' (degrees).")]
+    [Range(0f, 90f)]
+    public float panicMaxAngle = 60f;
+
+    public AudioClip panicSFX;
+
+    [Range(0f, 1f)]
+    public float panicSFXVolume = 1f;
 
     [Header("Death")]
     public ParticleSystem deathVFX;
@@ -53,6 +103,16 @@ public class EnemyData : ScriptableObject
 
     [Min(1)]
     public int lootDropQuantityMax = 1;
+
+    /// <summary>Panic speed, always calculated from the base speed (never stacks).</summary>
+    public float PanicMoveSpeed
+    {
+        get
+        {
+            float speed = baseMoveSpeed * panicSpeedMultiplier;
+            return panicSpeedCap > 0f ? Mathf.Min(speed, panicSpeedCap) : speed;
+        }
+    }
 
     private void OnValidate()
     {

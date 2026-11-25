@@ -279,7 +279,7 @@ public class PlayerAttack : MonoBehaviour
             return;
 
         foreach (Enemy enemy in hitBuffer)
-            enemy.TakeDamage(damagePerHit);
+            enemy.TakeDamage(damagePerHit, transform.position);
 
         attackTimer = AttackInterval;
     }

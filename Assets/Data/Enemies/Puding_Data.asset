@@ -15,13 +15,29 @@ MonoBehaviour:
   enemyName: Puding
   maxHealth: 3
   baseMoveSpeed: 1.5
+  canBeDamaged: 1
   visualScale: 1
   vfxColor: {r: 0.45, g: 0.25, b: 0.1, a: 1}
+  vfxScale: 1
   idleDurationMin: 2
   idleDurationMax: 4
   moveDurationMin: 3
   moveDurationMax: 6
-  deathVFX: {fileID: 2057347891792772077, guid: 247cabf5a6f84e44ea7d2450ae09ba04, type: 3}
+  damageFlashDuration: 0.1
+  damageFlashColor: {r: 1, g: 0.35, b: 0.35, a: 1}
+  hitVFX: {fileID: 8552749682071810380, guid: b294932049712d84596477d1413455c2, type: 3}
+  hitSFX: {fileID: 0}
+  hitSFXVolume: 1
+  canPanic: 1
+  panicSpeedMultiplier: 1.5
+  panicSpeedCap: 4
+  panicDuration: 2
+  panicResetOnDamage: 1
+  panicDirectionInterval: 0.8
+  panicMaxAngle: 60
+  panicSFX: {fileID: 0}
+  panicSFXVolume: 1
+  deathVFX: {fileID: 8552749682071810380, guid: a3af35f9a7aece146a41e291208ff789, type: 3}
   deathSFX: {fileID: 0}
   deathSFXVolume: 1
   canDropLoot: 1
