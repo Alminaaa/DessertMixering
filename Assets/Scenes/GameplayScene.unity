@@ -2628,6 +2628,12 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   maxAttemptsPerEnemy: 30
+  respawnEnabled: 1
+  respawnDelayMin: 5
+  respawnDelayMax: 8
+  minDistanceFromPlayer: 3
+  respawnVFX: {fileID: 8552749682071810380, guid: b294932049712d84596477d1413455c2, type: 3}
+  respawnVFXColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &1998938437
 GameObject:
   m_ObjectHideFlags: 0
