@@ -1,9 +1,11 @@
+
 using UnityEngine;
 
 /// <summary>
 /// Flips the enemy left / right based on its movement and applies the visual scale.
 /// Only this child is scaled, so health, speed and collider never change.
-///
+/// Also handles death effects.
+/// 
 /// Put this on the "Visual" child of the enemy prefab.
 /// </summary>
 public class EnemyVisual : MonoBehaviour
@@ -19,8 +21,11 @@ public class EnemyVisual : MonoBehaviour
 
     private void Awake()
     {
-        if (enemy == null) enemy = GetComponentInParent<Enemy>();
-        if (motor == null) motor = GetComponentInParent<EnemyMotor>();
+        if (enemy == null)
+            enemy = GetComponentInParent<Enemy>();
+
+        if (motor == null)
+            motor = GetComponentInParent<EnemyMotor>();
 
         if (enemy != null && enemy.Data != null)
             scale = enemy.Data.visualScale;
@@ -33,8 +38,9 @@ public class EnemyVisual : MonoBehaviour
         if (motor == null)
             return;
 
-        // Only flip when clearly moving left or right, so straight up/down keeps the last side.
+        // Only flip when clearly moving left or right.
         float vx = motor.Velocity.x;
+
         if (Mathf.Abs(vx) > 0.05f)
             facing = vx > 0f ? 1f : -1f;
 
@@ -44,6 +50,46 @@ public class EnemyVisual : MonoBehaviour
     private void Apply()
     {
         float sign = spriteDrawnFacingRight ? facing : -facing;
-        transform.localScale = new Vector3(scale * sign, scale, 1f);
+
+        transform.localScale = new Vector3(
+            scale * sign,
+            scale,
+            1f
+        );
+    }
+
+    /// <summary>
+    /// Plays the death effects using this enemy's data.
+    /// </summary>
+    public void PlayDeathEffects()
+    {
+        if (enemy == null || enemy.Data == null)
+            return;
+
+        EnemyData data = enemy.Data;
+
+        if (data.deathVFX != null)
+        {
+            ParticleSystem effect = Instantiate(
+                data.deathVFX,
+                transform.position,
+                Quaternion.identity
+            );
+
+            ParticleSystem.MainModule main = effect.main;
+
+            main.startColor = data.vfxColor;
+
+            effect.Play();
+        }
+
+        if (data.deathSFX != null)
+        {
+            AudioSource.PlayClipAtPoint(
+                data.deathSFX,
+                transform.position,
+                data.deathSFXVolume
+            );
+        }
     }
 }

@@ -17,7 +17,15 @@ MonoBehaviour:
   baseMoveSpeed: 1.5
   visualScale: 1
   vfxColor: {r: 0.9559748, g: 0.76475954, b: 0.6222854, a: 1}
-  idleDurationMin: 3
-  idleDurationMax: 6
+  idleDurationMin: 2
+  idleDurationMax: 4
   moveDurationMin: 3
   moveDurationMax: 6
+  deathVFX: {fileID: 2057347891792772077, guid: 247cabf5a6f84e44ea7d2450ae09ba04, type: 3}
+  deathSFX: {fileID: 0}
+  deathSFXVolume: 1
+  canDropLoot: 1
+  lootPrefab: {fileID: 1316498173273171139, guid: 9d3da2a487aa3be49b5ed7bd2a9d642f, type: 3}
+  lootDropChance: 1
+  lootDropQuantityMin: 1
+  lootDropQuantityMax: 1

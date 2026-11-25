@@ -1,3 +1,4 @@
+
 using UnityEngine;
 
 /// <summary>
@@ -31,10 +32,38 @@ public class EnemyData : ScriptableObject
     [Min(0f)] public float moveDurationMin = 3f;
     [Min(0f)] public float moveDurationMax = 6f;
 
+    [Header("Death")]
+    public ParticleSystem deathVFX;
+
+    public AudioClip deathSFX;
+
+    [Range(0f, 1f)]
+    public float deathSFXVolume = 1f;
+
+    [Header("Loot")]
+    public bool canDropLoot = true;
+
+    public GameObject lootPrefab;
+
+    [Range(0f, 1f)]
+    public float lootDropChance = 1f;
+
+    [Min(1)]
+    public int lootDropQuantityMin = 1;
+
+    [Min(1)]
+    public int lootDropQuantityMax = 1;
+
     private void OnValidate()
     {
         // Keep max values from going below min values.
-        if (idleDurationMax < idleDurationMin) idleDurationMax = idleDurationMin;
-        if (moveDurationMax < moveDurationMin) moveDurationMax = moveDurationMin;
+        if (idleDurationMax < idleDurationMin)
+            idleDurationMax = idleDurationMin;
+
+        if (moveDurationMax < moveDurationMin)
+            moveDurationMax = moveDurationMin;
+
+        if (lootDropQuantityMax < lootDropQuantityMin)
+            lootDropQuantityMax = lootDropQuantityMin;
     }
 }

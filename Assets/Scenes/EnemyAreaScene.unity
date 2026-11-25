@@ -480,6 +480,7 @@ GameObject:
   - component: {fileID: 708379718}
   - component: {fileID: 708379719}
   - component: {fileID: 708379720}
+  - component: {fileID: 708379721}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -723,6 +724,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &708379721
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 708379713}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a85bb809e10fbd47974ed7c98764a42, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerAttack
 --- !u!1 &844901437
 GameObject:
   m_ObjectHideFlags: 0
@@ -901,6 +914,63 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 944893140}
   m_CullTransparentMesh: 1
+--- !u!1001 &1136866984
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4126621136895828353, guid: ad3c51b7fb51326439c762025e4ceab7, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.82739
+      objectReference: {fileID: 0}
+    - target: {fileID: 4126621136895828353, guid: ad3c51b7fb51326439c762025e4ceab7, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.77461
+      objectReference: {fileID: 0}
+    - target: {fileID: 4126621136895828353, guid: ad3c51b7fb51326439c762025e4ceab7, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4126621136895828353, guid: ad3c51b7fb51326439c762025e4ceab7, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4126621136895828353, guid: ad3c51b7fb51326439c762025e4ceab7, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4126621136895828353, guid: ad3c51b7fb51326439c762025e4ceab7, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4126621136895828353, guid: ad3c51b7fb51326439c762025e4ceab7, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4126621136895828353, guid: ad3c51b7fb51326439c762025e4ceab7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4126621136895828353, guid: ad3c51b7fb51326439c762025e4ceab7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4126621136895828353, guid: ad3c51b7fb51326439c762025e4ceab7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5015499524588662089, guid: ad3c51b7fb51326439c762025e4ceab7, type: 3}
+      propertyPath: m_Name
+      value: Enemy_Puding
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: ad3c51b7fb51326439c762025e4ceab7, type: 3}
 --- !u!1 &1274847639
 GameObject:
   m_ObjectHideFlags: 0
@@ -1322,3 +1392,4 @@ SceneRoots:
   - {fileID: 844901441}
   - {fileID: 1595603432}
   - {fileID: 708379714}
+  - {fileID: 1136866984}
